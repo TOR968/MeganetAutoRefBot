@@ -1,5 +1,7 @@
 # MeganetAutoRefBot
 
+https://meganet.app/login?refcode=591OHJ
+
 An automated bot for Meganet wallet registration and point farming with proxy and user-agent rotation support.
 
 | ✅  | Feature                     |
@@ -9,6 +11,10 @@ An automated bot for Meganet wallet registration and point farming with proxy an
 | ✅  | Proxy support for multiple wallets |
 | ✅  | User-agent rotation for each wallet |
 | ✅  | Interactive Solana wallet generator |
+
+## For suggestions or to report a bug, please contact [telegram](https://t.me/tor_dev)
+
+## [Support the development 💙](https://support-me-ruby.vercel.app/)
 
 ## Requirements
 
