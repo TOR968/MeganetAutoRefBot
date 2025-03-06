@@ -1,0 +1,19 @@
+{
+    "name": "meganetautorefbot",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js",
+        "wallet": "node generateWallets.js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@solana/web3.js": "^1.98.0",
+        "axios": "^1.8.1",
+        "https-proxy-agent": "^7.0.2",
+        "socks-proxy-agent": "^8.0.5"
+    }
+}
