@@ -5,6 +5,7 @@
     "main": "index.js",
     "scripts": {
         "start": "node index.js",
+        "ref": "node ref.js",
         "wallet": "node generateWallets.js"
     },
     "keywords": [],

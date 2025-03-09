@@ -4,13 +4,14 @@ https://meganet.app/login?refcode=591OHJ
 
 An automated bot for Meganet wallet registration and point farming with proxy and user-agent rotation support.
 
-| ✅  | Feature                     |
-| --- | --------------------------- |
+| ✅  | Feature                                          |
+| --- | ------------------------------------------------ |
 | ✅  | Automatic wallet registration with referral code |
-| ✅  | Periodic ping operations to farm points |
-| ✅  | Proxy support for multiple wallets |
-| ✅  | User-agent rotation for each wallet |
-| ✅  | Interactive Solana wallet generator |
+| ✅  | Periodic ping operations to farm points          |
+| ✅  | Proxy support for multiple wallets               |
+| ✅  | User-agent rotation for each wallet              |
+| ✅  | Interactive Solana wallet generator              |
+| ✅  | Batch processing (100 wallets per batch)         |
 
 ## For suggestions or to report a bug, please contact [telegram](https://t.me/tor_dev)
 
@@ -40,7 +41,6 @@ npm install
     - Add your wallet addresses to `wallets.json`
     - Add your proxies to `proxy.txt` (one proxy per line)
     - Configure settings in `config.json`
-
 
 ## Wallet Generator
 
@@ -78,7 +78,9 @@ Create a file named `wallets.json` with your wallet information:
     }
 ]
 ```
+
 ## Configuration
+
 ### proxy.txt
 
 Create a file named `proxy.txt` with your proxies (one per line):
@@ -95,14 +97,12 @@ Create a file named `config.json` with your settings:
 ```json
 {
     "refCode": "YOUR_REFERRAL_CODE",
-    "isRegistrationNeeded": true,
     "pingInterval": 15000,
     "useProxy": true
 }
 ```
 
 -   `refCode`: Your Meganet referral code
--   `isRegistrationNeeded`: Set to `true` for first-time registration, `false` for subsequent runs
 -   `pingInterval`: Time between pings in milliseconds (default: 15000)
 -   `useProxy`: Set to `true` to use proxies, `false` to use direct connection
 
@@ -110,14 +110,17 @@ Create a file named `config.json` with your settings:
 
 Start the bot:
 
+- start auto ref
+
+```bash
+node ref.js
+```
+
+- start to farm points
+
 ```bash
 node index.js
 ```
-
-The bot will:
-
-1. Register each wallet with your referral code (if `isRegistrationNeeded` is `true`)
-2. Start periodic ping operations to farm points
 
 ## Disclaimer
 

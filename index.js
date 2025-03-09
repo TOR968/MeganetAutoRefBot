@@ -1,12 +1,11 @@
 const fs = require("fs");
 const axios = require("axios");
-const { SocksProxyAgent } = require("socks-proxy-agent");
-const { HttpsProxyAgent } = require("https-proxy-agent");
 const https = require("https");
 const config = require("./config.json");
 const UserAgentManager = require("./utils/userAgentManager");
-const { registerWallet, getWalletInfo } = require("./utils/walletManager");
-const { colors, logWithColor } = require("./utils/logger");
+const { getWalletInfo } = require("./utils/walletManager");
+const { logWithColor } = require("./utils/logger");
+const { getProxyAgent } = require("./utils/proxyManager");
 
 const userAgentManager = new UserAgentManager();
 
@@ -15,24 +14,6 @@ const proxies = fs
     .readFileSync("./proxy.txt", "utf8")
     .split("\n")
     .filter((proxy) => proxy.trim() !== "");
-
-function getProxyAgent(proxyString, walletId) {
-    if (!proxyString) return null;
-
-    try {
-        if (proxyString.startsWith("http")) {
-            logWithColor(walletId, `Using proxy: ${proxyString}`, "info");
-            return new HttpsProxyAgent(proxyString);
-        } else if (proxyString.startsWith("socks")) {
-            logWithColor(walletId, `Using proxy: ${proxyString}`, "info");
-            return new SocksProxyAgent(proxyString);
-        }
-    } catch (error) {
-        logWithColor(walletId, `Error creating proxy agent: ${error.message}`, "error");
-    }
-
-    return null;
-}
 
 async function handlePing(wallet, registrationResult, proxy) {
     const walletId = wallet.id;
@@ -79,11 +60,7 @@ async function handlePing(wallet, registrationResult, proxy) {
             const pingResponse = await axios(pingConfig);
 
             if (pingResponse.status === 200) {
-                logWithColor(
-                    walletId,
-                    `Ping successful! Points today: ${pingResponse.data.pointsFarmToday}`,
-                    "ping"
-                );
+                logWithColor(walletId, `Ping successful! Points today: ${pingResponse.data.pointsFarmToday}`, "ping");
 
                 if (pingCount % 10 === 0) {
                     const uptimeConfig = {
@@ -137,9 +114,8 @@ async function handlePing(wallet, registrationResult, proxy) {
 async function main() {
     logWithColor("SYSTEM", `Starting Meganet bot for ${wallets.length} wallets...`, "info");
     logWithColor("SYSTEM", `Use proxy: ${config.useProxy ? "Yes" : "No"}`, "info");
-    logWithColor("SYSTEM", `Registration needed: ${config.isRegistrationNeeded ? "Yes" : "No"}`, "info");
 
-    const getRandomDelay = () => Math.floor(Math.random() * 4000) + 1000;
+    const getRandomDelay = () => Math.floor(Math.random() * 5000) + 2000;
 
     for (const wallet of wallets) {
         setTimeout(async () => {
@@ -155,15 +131,10 @@ async function main() {
                 logWithColor,
                 userAgent,
                 refCode: config.refCode,
-                isRegistrationNeeded: config.isRegistrationNeeded,
+                isRegistrationNeeded: false,
             };
 
-            let walletResult;
-            if (config.isRegistrationNeeded) {
-                walletResult = await registerWallet(wallet, proxy, options);
-            } else {
-                walletResult = await getWalletInfo(wallet, proxy, options);
-            }
+            let walletResult = await getWalletInfo(wallet, proxy, options);
 
             handlePing(wallet, walletResult, proxy);
         }, getRandomDelay());
