@@ -6,6 +6,7 @@ const UserAgentManager = require("./utils/userAgentManager");
 const { getWalletInfo } = require("./utils/walletManager");
 const { logWithColor } = require("./utils/logger");
 const { getProxyAgent } = require("./utils/proxyManager");
+const { handleTasks } = require("./utils/taskManager");
 
 const userAgentManager = new UserAgentManager();
 
@@ -111,6 +112,56 @@ async function handlePing(wallet, registrationResult, proxy) {
     }, config.pingInterval || 15000);
 }
 
+async function processWalletTasks(wallet, registrationResult, proxy) {
+    const walletId = wallet.id;
+    const userAgent =
+        userAgentManager.getUserAgent(wallet.address) ||
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36";
+
+    if (!registrationResult.success) {
+        logWithColor(walletId, `Missing task processing due to a registration error`, "warning");
+        return;
+    }
+
+    const { walletId: meganetWalletId } = registrationResult;
+    logWithColor(walletId, `Start processing tasks`, "info");
+
+    const options = {
+        userAgent,
+        proxy,
+        proxyManager: getProxyAgent,
+        walletDisplayId: walletId,
+    };
+
+    try {
+        const tasksResult = await handleTasks(meganetWalletId, options);
+
+        if (tasksResult.success) {
+            logWithColor(
+                walletId,
+                `Task processing completed. Completed: ${tasksResult.totalCompleted}, Errors: ${tasksResult.totalFailed}`,
+                "success"
+            );
+
+            if (tasksResult.completedTasks.length > 0) {
+                logWithColor(walletId, `Completed tasks: ${tasksResult.completedTasks.join(", ")}`, "success");
+            }
+
+            if (tasksResult.failedTasks.length > 0) {
+                logWithColor(
+                    walletId,
+                    `Failed tasks: ${tasksResult.failedTasks.map((t) => t.taskName).join(", ")}`,
+                    "warning"
+                );
+            }
+        } else {
+            logWithColor(walletId, `Task processing error: ${tasksResult.error}`, "error");
+        }
+    } catch (error) {
+        logWithColor(walletId, `Task processing error: ${error.message}`, "error");
+    }
+}
+
 async function main() {
     logWithColor("SYSTEM", `Starting Meganet bot for ${wallets.length} wallets...`, "info");
     logWithColor("SYSTEM", `Use proxy: ${config.useProxy ? "Yes" : "No"}`, "info");
@@ -135,6 +186,10 @@ async function main() {
             };
 
             let walletResult = await getWalletInfo(wallet, proxy, options);
+
+            if (config.processTasks !== false) {
+                await processWalletTasks(wallet, walletResult, proxy);
+            }
 
             handlePing(wallet, walletResult, proxy);
         }, getRandomDelay());

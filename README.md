@@ -12,6 +12,7 @@ An automated bot for Meganet wallet registration and point farming with proxy an
 | ✅  | User-agent rotation for each wallet              |
 | ✅  | Interactive Solana wallet generator              |
 | ✅  | Batch processing (100 wallets per batch)         |
+| ✅  | Automatic task completion for each wallet        |
 
 ## For suggestions or to report a bug, please contact [telegram](https://t.me/tor_dev)
 
@@ -98,25 +99,27 @@ Create a file named `config.json` with your settings:
 {
     "refCode": "YOUR_REFERRAL_CODE",
     "pingInterval": 15000,
-    "useProxy": true
+    "useProxy": true,
+    "processTasks": true
 }
 ```
 
 -   `refCode`: Your Meganet referral code
 -   `pingInterval`: Time between pings in milliseconds (default: 15000)
 -   `useProxy`: Set to `true` to use proxies, `false` to use direct connection
+-   `processTasks`: Set to `true` to automatically complete tasks for each wallet, `false` to disable task processing
 
 ## Usage
 
 Start the bot:
 
-- start auto ref
+-   start auto ref
 
 ```bash
 node ref.js
 ```
 
-- start to farm points
+-   start to farm points
 
 ```bash
 node index.js

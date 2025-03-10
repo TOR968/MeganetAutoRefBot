@@ -1,5 +1,6 @@
 {
     "refCode": "591OHJ",
     "pingInterval": 15000,
-    "useProxy": true
+    "useProxy": true,
+    "processTasks": true
 }
