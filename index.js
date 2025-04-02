@@ -7,6 +7,7 @@ const { getWalletInfo } = require("./utils/walletManager");
 const { logWithColor } = require("./utils/logger");
 const { getProxyAgent } = require("./utils/proxyManager");
 const { handleTasks } = require("./utils/taskManager");
+const { generateHeaders } = require("./utils/headerManager");
 
 const userAgentManager = new UserAgentManager();
 
@@ -38,11 +39,7 @@ async function handlePing(wallet, registrationResult, proxy) {
             const pingConfig = {
                 method: "get",
                 url: `https://api.meganet.app/points/point-today/${pointId}`,
-                headers: {
-                    "User-Agent": userAgent,
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                },
+                headers: generateHeaders(userAgent),
                 timeout: 30000,
             };
 
@@ -67,11 +64,7 @@ async function handlePing(wallet, registrationResult, proxy) {
                     const uptimeConfig = {
                         method: "patch",
                         url: `https://api.meganet.app/wallets/uptime/${meganetWalletId}`,
-                        headers: {
-                            "User-Agent": userAgent,
-                            Accept: "application/json",
-                            "Content-Type": "application/json",
-                        },
+                        headers: generateHeaders(userAgent),
                         timeout: 30000,
                     };
 

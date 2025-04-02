@@ -1,5 +1,6 @@
 const axios = require("axios");
 const https = require("https");
+const { generateHeaders } = require("./headerManager");
 
 async function walletOperation(wallet, proxy, options = {}) {
     const { getProxyAgent, logWithColor, userAgent, refCode, isRegistrationNeeded } = options;
@@ -21,11 +22,7 @@ async function walletOperation(wallet, proxy, options = {}) {
         const config = {
             method: "get",
             url,
-            headers: {
-                "User-Agent": userAgent,
-                Accept: "application/json",
-                "Content-Type": "application/json",
-            },
+            headers: generateHeaders(userAgent),
             timeout: 30000,
         };
 

@@ -1,6 +1,7 @@
 const axios = require("axios");
 const https = require("https");
 const { logWithColor } = require("./logger");
+const { generateHeaders } = require("./headerManager");
 
 async function getWalletTasks(walletId, options) {
     const { userAgent, proxy, proxyManager, walletDisplayId } = options;
@@ -9,11 +10,7 @@ async function getWalletTasks(walletId, options) {
         const requestConfig = {
             method: "get",
             url: `https://api.meganet.app/wallets/task/${walletId}`,
-            headers: {
-                "User-Agent": userAgent,
-                Accept: "application/json",
-                "Content-Type": "application/json",
-            },
+            headers: generateHeaders(userAgent),
             timeout: 30000,
         };
 
@@ -60,11 +57,7 @@ async function completeTask(walletId, taskName, options) {
         const requestConfig = {
             method: "patch",
             url: `https://api.meganet.app/wallets/task/${walletId}/${taskName}`,
-            headers: {
-                "User-Agent": userAgent,
-                Accept: "application/json",
-                "Content-Type": "application/json",
-            },
+            headers: generateHeaders(userAgent),
             timeout: 30000,
         };
 

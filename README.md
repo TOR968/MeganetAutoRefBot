@@ -91,6 +91,13 @@ http://username:password@host:port
 socks5://username:password@host:port
 ```
 
+### User Agents
+
+The bot uses a list of user agents from `utils/user_agents_list.txt` to rotate between different browser signatures. To keep the bot working properly:
+
+1. Periodically update the list in `utils/user_agents_list.txt` with fresh user agent strings
+2. After updating, delete the `user_agents.json` file to force automatic reassignment of user agents to wallets
+
 ### config.json
 
 Create a file named `config.json` with your settings:
